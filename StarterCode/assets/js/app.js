@@ -1,4 +1,4 @@
-var svgWidth = 860;
+var svgWidth = 800;
 var svgHeight = 500;
 
 var margin = {
@@ -36,12 +36,12 @@ d3.csv("assets/data/data.csv")
     // ==============================
     var xLinearScale = d3
       .scaleLinear()
-      .domain(d3.extent(censusData, (d) => d.poverty))
+      .domain([d3.min(censusData, d => d.poverty) * .90, d3.max(censusData, (d) => d.poverty) * 1.2])
       .range([0, width]);
 
     var yLinearScale = d3
       .scaleLinear()
-      .domain(d3.extent(censusData, (d) => d.healthcare))
+      .domain([0, d3.max(censusData, (d) => d.healthcare)+2])
       .range([height, 0]);
 
     // Step 3: Create axis functions
@@ -95,18 +95,18 @@ d3.csv("assets/data/data.csv")
       .offset([80, -60])
       .html(function (d) {
         return `${d.state}<br>In Poverty %: ${d.poverty}<br>Lacks Healthcare %: ${d.healthcare}`;
-      });
+      }).style("font-size", "10px");
 
     // Step 7: Create tooltip in the chart
     // ==============================
     chartGroup.call(toolTip);
 
     // Step 8: Create event listeners to display and hide the tooltip
-    // ==============================
-    circlesGroup
-      .on("click", function (data) {
+    // ==============================luis
+    textCircles
+      .on("mouseover", function (data) {
         toolTip.show(data, this);
-      })
+              })
       // onmouseout event
       .on("mouseout", function (data, index) {
         toolTip.hide(data);
